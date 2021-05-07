@@ -36,185 +36,196 @@ class _AlertScreenState extends State<AlertScreen> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownSearch<StateModel>(
-                      validator: (StateModel value) {
-                        if (value == null) {
-                          return 'Select State';
-                        }
-                        return null;
-                      },
-                      dropdownSearchDecoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      searchBoxDecoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      autoFocusSearchBox: true,
-                      showSearchBox: true,
-                      mode: Mode.MENU,
-                      showSelectedItem: true,
-                      items: stateModelList,
-                      itemAsString: (StateModel s) => s.stateName,
-                      selectedItem: selectedState,
-                      onChanged: (StateModel data) {
-                        setState(() {
-                          if (data == null) {
-                            selectedState = null;
-                          } else {
-                            selectedState = data;
+      child: Container(
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
+            ]),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DropdownSearch<StateModel>(
+                        validator: (StateModel value) {
+                          if (value == null) {
+                            return 'Select State';
                           }
-                        });
-                      },
-                      filterFn: (state, filter) =>
-                          state.filterByStateName(filter),
-                      compareFn: (i, s) => i.isEqual(s),
-                      label: "State",
-                      hint: "Search State",
-                      showClearButton: true,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FutureBuilder(
-                      future: DistrictApi.fetchDistrictsByState(selectedState),
-                      initialData: [],
-                      builder: (context, snapshot) {
-                        return districtSearchableDropdown(context, snapshot);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownSearch<String>(
-                      validator: (String value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Select Age Category';
-                        }
-                        return null;
-                      },
-                      dropdownSearchDecoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          return null;
+                        },
+                        dropdownSearchDecoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(8.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
-                      ),
-                      searchBoxDecoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
+                        searchBoxDecoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(8.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
+                        autoFocusSearchBox: true,
+                        showSearchBox: true,
+                        mode: Mode.MENU,
+                        showSelectedItem: true,
+                        items: stateModelList,
+                        itemAsString: (StateModel s) => s.stateName,
+                        selectedItem: selectedState,
+                        onChanged: (StateModel data) {
+                          setState(() {
+                            if (data == null) {
+                              selectedState = null;
+                            } else {
+                              selectedState = data;
+                            }
+                          });
+                        },
+                        filterFn: (state, filter) =>
+                            state.filterByStateName(filter),
+                        compareFn: (i, s) => i.isEqual(s),
+                        label: "State",
+                        hint: "Search State",
+                        showClearButton: true,
                       ),
-                      autoFocusSearchBox: true,
-                      showSearchBox: false,
-                      mode: Mode.MENU,
-                      showSelectedItem: true,
-                      items: ["18-45", "Above 45"],
-                      selectedItem: selectedAgeCategory,
-                      onChanged: (String data) {
-                        setState(() {
-                          if (data == null || data.isEmpty) {
-                            selectedAgeCategory = null;
-                          } else {
-                            selectedAgeCategory = data;
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FutureBuilder(
+                        future:
+                            DistrictApi.fetchDistrictsByState(selectedState),
+                        initialData: [],
+                        builder: (context, snapshot) {
+                          return districtSearchableDropdown(context, snapshot);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DropdownSearch<String>(
+                        validator: (String value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Select Age Category';
                           }
-                        });
-                      },
-                      label: "Age",
-                      showClearButton: true,
+                          return null;
+                        },
+                        dropdownSearchDecoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(8.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        searchBoxDecoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(8.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        autoFocusSearchBox: true,
+                        showSearchBox: false,
+                        mode: Mode.MENU,
+                        showSelectedItem: true,
+                        items: ["18-45", "Above 45"],
+                        selectedItem: selectedAgeCategory,
+                        onChanged: (String data) {
+                          setState(() {
+                            if (data == null || data.isEmpty) {
+                              selectedAgeCategory = null;
+                            } else {
+                              selectedAgeCategory = data;
+                            }
+                          });
+                        },
+                        label: "Age",
+                        showClearButton: true,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      validator: (String value) {
-                        if (value.isEmpty) {
-                          return 'Enter valid Name';
-                        }
-                        return null;
-                      },
-                      onSaved: (newValue) {
-                        setState(() {
-                          name = newValue;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        hintText: 'Enter your Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return 'Enter valid Name';
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          setState(() {
+                            name = newValue;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Name',
+                          hintText: 'Enter your Name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      validator: (String value) {
-                        if (value.isEmpty || isNotValidEmail(value)) {
-                          return 'Enter valid Email';
-                        }
-                        return null;
-                      },
-                      onSaved: (newValue) {
-                        setState(() {
-                          email = newValue;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Enter Email',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        validator: (String value) {
+                          if (value.isEmpty || isNotValidEmail(value)) {
+                            return 'Enter valid Email';
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          setState(() {
+                            email = newValue;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'Enter Email',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _buildButton(
-                      onTap: () {
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
-                          _create(NotifyModel(
-                              selectedState.stateId,
-                              selectedDistrict.districtId,
-                              selectedAgeCategory,
-                              name,
-                              email));
-                          CoolAlert.show(
-                            context: context,
-                            type: CoolAlertType.success,
-                            text: 'You Will be Notified on Slot Availability!',
-                          );
-                        }
-                      },
-                      text: 'Notify',
-                      color: Colors.blue,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildButton(
+                        onTap: () {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            _create(NotifyModel(
+                                selectedState.stateId,
+                                selectedDistrict.districtId,
+                                selectedAgeCategory,
+                                name,
+                                email));
+                            CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.success,
+                              text:
+                                  'You Will be Notified on Slot Availability!',
+                            );
+                          }
+                        },
+                        text: 'Notify',
+                        color: Colors.blue,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
