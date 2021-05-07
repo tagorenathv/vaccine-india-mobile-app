@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'SlotModel.dart';
 
 class CenterModel {
+  final int centerId;
   final String centerName;
   final String address1;
   final String address2;
@@ -13,7 +14,8 @@ class CenterModel {
   final List<SlotModel> slots;
 
   CenterModel(
-      {@required this.centerName,
+      {@required this.centerId,
+      @required this.centerName,
       @required this.address1,
       @required this.address2,
       @required this.timeSchedule,
@@ -35,11 +37,13 @@ class CenterModel {
           element["min_age_limit"].toString(),
           element["vaccine"],
           slottime,
+          element["available_capacity"],
         ),
       );
     });
 
     return CenterModel(
+        centerId: json["center_id"],
         centerName: json["name"],
         address1: json["block_name"] + json["address"],
         address2: json["district_name"] + json["state_name"],

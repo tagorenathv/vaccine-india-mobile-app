@@ -1,5 +1,8 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:vaccine_india/helpers/pincode_api.dart';
+import 'package:vaccine_india/models/CenterModel.dart';
+import 'package:vaccine_india/models/SlotModel.dart';
 
 class PincodeScrenn extends StatefulWidget {
   @override
@@ -8,29 +11,269 @@ class PincodeScrenn extends StatefulWidget {
 
 class _PincodeScrennState extends State<PincodeScrenn> {
   TextEditingController _textController = TextEditingController();
-
-  final border = OutlineInputBorder(
-      borderRadius: BorderRadius.horizontal(left: Radius.circular(5)));
+  String pincode;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Container(
-        margin: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-            ]),
-        child: Column(
-          children: [
-            buildPincodeSearchBoxWithButton(context),
-            getListView(context),
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                ]),
+            child: Column(
+              children: [
+                buildPincodeSearchBoxWithButton(context),
+                slotsWidget(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget slotsWidget() {
+    return FutureBuilder(
+      future: PincodeApi.fetchSlotsByPincode(pincode),
+      initialData: ListView(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.none &&
+            snapshot.hasData == null) {
+          return ListView();
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return ListView.builder(
+            shrinkWrap: true,
+            primary: false,
+            physics: NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            itemCount: getSnapshotDataLength(snapshot),
+            itemBuilder: (context, index) {
+              CenterModel centerModel = snapshot.data[index];
+              return buildSlotdetailsOnCard(context, centerModel);
+            },
+          );
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+
+  getSnapshotDataLength(AsyncSnapshot snapshot) {
+    try {
+      return snapshot.data.length;
+    } on Exception catch (e) {
+      print(e);
+    } catch (error) {
+      print(error);
+    }
+    return 0;
+  }
+
+  Container buildSlotdetailsOnCard(
+      BuildContext context, CenterModel centerModel) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 8.0),
+          ]),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    centerModel.centerName,
+                    style: Theme.of(context).textTheme.headline6.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  Text(
+                    centerModel.address1,
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          color: Colors.grey,
+                        ),
+                  ),
+                  Text(
+                    centerModel.address2,
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          color: Colors.grey,
+                        ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.schedule_rounded,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                        child: Text(
+                          centerModel.timeSchedule,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Lato',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.shopping_cart_rounded,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                        child: Text(
+                          centerModel.price,
+                          style: const TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    color: Colors.white,
+                  ),
+                  (centerModel.slots == null || centerModel.slots.length == 0)
+                      ? Table()
+                      : buildTable(context, centerModel.slots[0]),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                Card(
+                  elevation: 0,
+                  child: Ink(
+                    decoration: ShapeDecoration(
+                      color: Colors.blue,
+                      shape: CircleBorder(),
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.near_me_rounded),
+                      color: Colors.white,
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 0,
+                  child: Ink(
+                    decoration: ShapeDecoration(
+                      color: Colors.blue,
+                      shape: CircleBorder(),
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.read_more_rounded),
+                      color: Colors.white,
+                      onPressed: () => _showBottomSheet(context, centerModel),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Table buildTable(BuildContext context, SlotModel slot) {
+    return Table(
+      children: [
+        TableRow(
+          children: [
+            Text(
+              "Date",
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            Text(
+              slot.date,
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Lato',
+                  ),
+            ),
+          ],
+        ),
+        TableRow(
+          children: [
+            Text(
+              "Minimum Age",
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Lato',
+                  ),
+            ),
+            Text(
+              slot.minAge,
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+        ),
+        TableRow(
+          children: [
+            Text(
+              "Vaccine Type",
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            Text(
+              slot.vaccineType,
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+        ),
+        TableRow(
+          children: [
+            Text(
+              "Slots",
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            Text(
+              slot.slotTimes,
+              style: Theme.of(context).textTheme.subtitle2.copyWith(
+                    fontFamily: 'Lato',
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -44,6 +287,7 @@ class _PincodeScrennState extends State<PincodeScrenn> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 keyboardType: TextInputType.number,
+                autofocus: true,
                 controller: _textController,
                 decoration: InputDecoration(
                   hintText: 'Pincode',
@@ -54,6 +298,9 @@ class _PincodeScrennState extends State<PincodeScrenn> {
                     icon: Icon(Icons.clear),
                     onPressed: () {
                       _textController.clear();
+                      setState(() {
+                        pincode = "";
+                      });
                     },
                   ),
                 ),
@@ -69,10 +316,10 @@ class _PincodeScrennState extends State<PincodeScrenn> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  CoolAlert.show(
-                      context: context,
-                      type: CoolAlertType.loading,
-                      autoCloseDuration: Duration(seconds: 2));
+                  setState(() {
+                    pincode = _textController.text;
+                  });
+                  FocusScope.of(context).requestFocus(FocusNode());
                 }),
           ),
         ],
@@ -80,7 +327,7 @@ class _PincodeScrennState extends State<PincodeScrenn> {
     );
   }
 
-  ListView getListView(BuildContext context) {
+  ListView getListView(BuildContext context, CenterModel centerModel) {
     return ListView(
       shrinkWrap: true,
       primary: false,
@@ -136,7 +383,7 @@ class _PincodeScrennState extends State<PincodeScrenn> {
                         Icons.expand_more_rounded,
                       ),
                       iconSize: 32,
-                      onPressed: () => _showBottomSheet(context),
+                      onPressed: () => _showBottomSheet(context, centerModel),
                       tooltip: 'More Slot Details',
                     ),
                   ],
@@ -310,7 +557,7 @@ class _PincodeScrennState extends State<PincodeScrenn> {
                         Icons.expand_more_rounded,
                       ),
                       iconSize: 32,
-                      onPressed: () => _showBottomSheet(context),
+                      onPressed: () => _showBottomSheet(context, centerModel),
                       tooltip: 'More Slot Details',
                     ),
                   ],
@@ -323,7 +570,7 @@ class _PincodeScrennState extends State<PincodeScrenn> {
     );
   }
 
-  void _showBottomSheet(BuildContext context) {
+  void _showBottomSheet(BuildContext context, CenterModel centerModel) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -354,15 +601,28 @@ class _PincodeScrennState extends State<PincodeScrenn> {
                           Icons.remove,
                           color: Colors.grey[600],
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            centerModel.centerName,
+                            style:
+                                Theme.of(context).textTheme.headline6.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                          ),
+                        ),
                         Expanded(
                           child: ListView.builder(
                             controller: controller,
-                            itemCount: 100,
+                            itemCount: (centerModel.slots == null)
+                                ? 0
+                                : centerModel.slots.length,
                             itemBuilder: (_, index) {
                               return Card(
                                 child: Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text("Element at index($index)"),
+                                  child: buildTable(
+                                      context, centerModel.slots[index]),
                                 ),
                               );
                             },

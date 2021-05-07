@@ -128,7 +128,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
             primary: false,
             physics: NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
-            itemCount: snapshot.data.length,
+            itemCount: getSnapshotDataLength(snapshot),
             itemBuilder: (context, index) {
               CenterModel centerModel = snapshot.data[index];
               return buildSlotdetailsOnCard(context, centerModel);
@@ -138,6 +138,15 @@ class _DistrictScreenState extends State<DistrictScreen> {
         return CircularProgressIndicator();
       },
     );
+  }
+
+  getSnapshotDataLength(AsyncSnapshot snapshot) {
+    try {
+      return snapshot.data.length;
+    } on Exception catch (e) {
+      print(e);
+    }
+    return 0;
   }
 
   Widget districtSearchableDropdown(
@@ -267,7 +276,9 @@ class _DistrictScreenState extends State<DistrictScreen> {
                   Divider(
                     color: Colors.white,
                   ),
-                  buildTable(context, centerModel.slots),
+                  (centerModel.slots == null || centerModel.slots.length == 0)
+                      ? Table()
+                      : buildTable(context, centerModel.slots[0]),
                 ],
               ),
             ),
@@ -297,7 +308,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
                     child: IconButton(
                       icon: Icon(Icons.read_more_rounded),
                       color: Colors.white,
-                      onPressed: () => _showBottomSheet(context),
+                      onPressed: () => _showBottomSheet(context, centerModel),
                     ),
                   ),
                 ),
@@ -309,11 +320,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
     );
   }
 
-  Table buildTable(BuildContext context, List<SlotModel> slots) {
-    if (slots == null || slots.length == 0) {
-      return Table();
-    }
-    SlotModel slot = slots[0];
+  Table buildTable(BuildContext context, SlotModel slot) {
     return Table(
       children: [
         TableRow(
@@ -395,7 +402,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
     );
   }
 
-  void _showBottomSheet(BuildContext context) {
+  void _showBottomSheet(BuildContext context, CenterModel centerModel) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -426,15 +433,28 @@ class _DistrictScreenState extends State<DistrictScreen> {
                           Icons.remove,
                           color: Colors.grey[600],
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            centerModel.centerName,
+                            style:
+                                Theme.of(context).textTheme.headline6.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                          ),
+                        ),
                         Expanded(
                           child: ListView.builder(
                             controller: controller,
-                            itemCount: 100,
+                            itemCount: (centerModel.slots == null)
+                                ? 0
+                                : centerModel.slots.length,
                             itemBuilder: (_, index) {
                               return Card(
                                 child: Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text("Element at index($index)"),
+                                  child: buildTable(
+                                      context, centerModel.slots[index]),
                                 ),
                               );
                             },

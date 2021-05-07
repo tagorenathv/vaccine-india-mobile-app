@@ -3,6 +3,8 @@ class SlotModel {
   final String minAge;
   final String vaccineType;
   final String slotTimes;
+  final int availableCapacity;
 
-  SlotModel(this.date, this.minAge, this.vaccineType, this.slotTimes);
+  SlotModel(this.date, this.minAge, this.vaccineType, this.slotTimes,
+      this.availableCapacity);
 }
