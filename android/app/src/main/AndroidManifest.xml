@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.vaccine_india">
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
    <application
-        android:label="vaccine_india"
+        android:label="Vaccine India"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

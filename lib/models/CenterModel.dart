@@ -12,6 +12,7 @@ class CenterModel {
   final int lat;
   final int lon;
   final List<SlotModel> slots;
+  final int pincode;
 
   CenterModel(
       {@required this.centerId,
@@ -22,7 +23,8 @@ class CenterModel {
       @required this.price,
       @required this.lat,
       @required this.lon,
-      @required this.slots});
+      @required this.slots,
+      @required this.pincode});
 
   factory CenterModel.fromJson(Map<String, dynamic> json) {
     List<dynamic> sessions = json["sessions"];
@@ -30,7 +32,7 @@ class CenterModel {
     sessions.forEach((element) {
       List<dynamic> sessionSlots = element["slots"];
       String slottime =
-          sessionSlots.reduce((value, element) => value + ', ' + element);
+          sessionSlots.reduce((value, element) => value + ' ' + element);
       slots.add(
         SlotModel(
           element["date"],
@@ -42,15 +44,20 @@ class CenterModel {
       );
     });
 
-    return CenterModel(
-        centerId: json["center_id"],
-        centerName: json["name"],
-        address1: json["block_name"] + json["address"],
-        address2: json["district_name"] + json["state_name"],
-        timeSchedule: json["from"] + " to " + json["to"],
-        price: json["fee_type"],
-        lat: json["lat"],
-        lon: json["long"],
-        slots: slots);
+    try {
+      return CenterModel(
+          centerId: json["center_id"],
+          centerName: json["name"],
+          address1: json["block_name"] + json["address"],
+          address2: json["district_name"] + json["state_name"],
+          timeSchedule: json["from"] + " to " + json["to"],
+          price: json["fee_type"],
+          lat: json["lat"],
+          lon: json["long"],
+          slots: slots,
+          pincode: json["pincode"]);
+    } on Exception catch (e) {
+      return null;
+    }
   }
 }

@@ -1,9 +1,10 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:vaccine_india/screens/about_screen.dart';
 import 'package:vaccine_india/screens/alert_screen.dart';
 import 'package:vaccine_india/screens/district_screen.dart';
 import 'package:vaccine_india/screens/pincode_screen.dart';
-import 'package:vaccine_india/widgets/main_appbar.dart';
+import 'package:vaccine_india/widgets/main_appbar_widget.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -12,19 +13,29 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
-  final screen = [DistrictScreen(), PincodeScrenn(), AlertScreen()];
+  final screen = [
+    DistrictScreen(),
+    PincodeScrenn(),
+    AlertScreen(),
+    AboutScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: MainAppBar(
-          title: Text(
-        "Vaccine India",
-        style: TextStyle(
-            fontSize: 35, color: Colors.white, fontWeight: FontWeight.bold),
-      )),
+        title: Text(
+          "Vaccine India",
+          style: TextStyle(
+            fontSize: 35,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       bottomNavigationBar: CurvedNavigationBar(
+        height: 60,
         animationCurve: Curves.fastLinearToSlowEaseIn,
         animationDuration: Duration(milliseconds: 500),
         color: Colors.blue,
@@ -46,6 +57,11 @@ class _MainScreenState extends State<MainScreen> {
             size: 30,
             color: selectedIndex == 2 ? Colors.white : Colors.black,
           ),
+          Icon(
+            Icons.settings_rounded,
+            size: 30,
+            color: selectedIndex == 3 ? Colors.white : Colors.black,
+          ),
         ],
         onTap: (index) {
           setState(() {
@@ -53,7 +69,10 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
       ),
-      body: screen[selectedIndex],
+      body: IndexedStack(
+        index: selectedIndex,
+        children: screen,
+      ),
     );
   }
 }

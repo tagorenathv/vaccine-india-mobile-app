@@ -1,11 +1,9 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:vaccine_india/helpers/districts_api.dart';
-import 'package:vaccine_india/helpers/slots_api.dart';
-import 'package:vaccine_india/models/CenterModel.dart';
 import 'package:vaccine_india/models/DistrictModel.dart';
-import 'package:vaccine_india/models/SlotModel.dart';
 import 'package:vaccine_india/models/StateModel.dart';
+import 'package:vaccine_india/widgets/slots_by_district_widget.dart';
 
 class DistrictScreen extends StatefulWidget {
   @override
@@ -21,6 +19,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
   @override
   void initState() {
     stateModelList = StateModel.getStates();
+    districtModelList = [];
     super.initState();
   }
 
@@ -48,7 +47,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
                   Divider(
                     color: Colors.white,
                   ),
-                  slotsWidget(),
+                  slotsWidget(selectedDistrict),
                 ],
               ),
             ),
@@ -70,13 +69,14 @@ class _DistrictScreenState extends State<DistrictScreen> {
         ),
         searchBoxDecoration: InputDecoration(
           contentPadding: EdgeInsets.all(8.0),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          // border: OutlineInputBorder(
+          //   borderRadius: BorderRadius.circular(16),
+          // ),
+          hintText: "Search State",
         ),
         autoFocusSearchBox: true,
         showSearchBox: true,
-        mode: Mode.MENU,
+        mode: Mode.BOTTOM_SHEET,
         showSelectedItem: true,
         items: stateModelList,
         itemAsString: (StateModel s) => s.stateName,
@@ -113,42 +113,6 @@ class _DistrictScreenState extends State<DistrictScreen> {
     );
   }
 
-  Widget slotsWidget() {
-    return FutureBuilder(
-      future: SlotsApi.fetchSlotsByDistrict(selectedDistrict),
-      initialData: ListView(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.none &&
-            snapshot.hasData == null) {
-          return ListView();
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          return ListView.builder(
-            shrinkWrap: true,
-            primary: false,
-            physics: NeverScrollableScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            itemCount: getSnapshotDataLength(snapshot),
-            itemBuilder: (context, index) {
-              CenterModel centerModel = snapshot.data[index];
-              return buildSlotdetailsOnCard(context, centerModel);
-            },
-          );
-        }
-        return CircularProgressIndicator();
-      },
-    );
-  }
-
-  getSnapshotDataLength(AsyncSnapshot snapshot) {
-    try {
-      return snapshot.data.length;
-    } on Exception catch (e) {
-      print(e);
-    }
-    return 0;
-  }
-
   Widget districtSearchableDropdown(
       BuildContext context, AsyncSnapshot snapshot) {
     List<DistrictModel> values = List<DistrictModel>.from(snapshot.data);
@@ -166,10 +130,12 @@ class _DistrictScreenState extends State<DistrictScreen> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
           ),
+          hintText: 'Search District',
         ),
+        emptyBuilder: _emptyDropDown,
         autoFocusSearchBox: true,
         showSearchBox: true,
-        mode: Mode.MENU,
+        mode: Mode.BOTTOM_SHEET,
         showSelectedItem: true,
         items: values,
         itemAsString: (DistrictModel s) => s.districtName,
@@ -193,282 +159,21 @@ class _DistrictScreenState extends State<DistrictScreen> {
     );
   }
 
-  // Widget getSlotData(CenterModel centerModel) {
-  //   return buildSlotdetailsOnCard(context, centerModel);
-  //   // return widgets;
-  //   // <Widget>[
-  //   //   buildSlotdetailsOnCard(context),
-  //   //   buildSlotdetailsOnCard(context),
-  //   //   buildSlotdetailsOnCard(context),
-  //   // ];
-  // }
-
-  Container buildSlotdetailsOnCard(
-      BuildContext context, CenterModel centerModel) {
-    return Container(
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 8.0),
-          ]),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    centerModel.centerName,
-                    style: Theme.of(context).textTheme.headline6.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  Text(
-                    centerModel.address1,
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(
-                          color: Colors.grey,
-                        ),
-                  ),
-                  Text(
-                    centerModel.address2,
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(
-                          color: Colors.grey,
-                        ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.schedule_rounded,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                        child: Text(
-                          centerModel.timeSchedule,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Lato',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.shopping_cart_rounded,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                        child: Text(
-                          centerModel.price,
-                          style: const TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: Colors.white,
-                  ),
-                  (centerModel.slots == null || centerModel.slots.length == 0)
-                      ? Table()
-                      : buildTable(context, centerModel.slots[0]),
-                ],
-              ),
+  Widget _emptyDropDown(BuildContext context, String searchEntry) {
+    String message = "";
+    if (selectedState == null) {
+      message = "Select a State";
+    } else {
+      message = "No District Found at the moment";
+    }
+    return Center(
+      child: Text(
+        message,
+        style: Theme.of(context).textTheme.headline6.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
             ),
-            Column(
-              children: [
-                Card(
-                  elevation: 0,
-                  child: Ink(
-                    decoration: ShapeDecoration(
-                      color: Colors.blue,
-                      shape: CircleBorder(),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.near_me_rounded),
-                      color: Colors.white,
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
-                Card(
-                  elevation: 0,
-                  child: Ink(
-                    decoration: ShapeDecoration(
-                      color: Colors.blue,
-                      shape: CircleBorder(),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.read_more_rounded),
-                      color: Colors.white,
-                      onPressed: () => _showBottomSheet(context, centerModel),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
-    );
-  }
-
-  Table buildTable(BuildContext context, SlotModel slot) {
-    return Table(
-      children: [
-        TableRow(
-          children: [
-            Text(
-              "Date",
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            Text(
-              slot.date,
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Lato',
-                  ),
-            ),
-          ],
-        ),
-        TableRow(
-          children: [
-            Text(
-              "Minimum Age",
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Lato',
-                  ),
-            ),
-            Text(
-              slot.minAge,
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-        TableRow(
-          children: [
-            Text(
-              "Vaccine Type",
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            Text(
-              slot.vaccineType,
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-        TableRow(
-          children: [
-            Text(
-              "Slots",
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            Text(
-              slot.slotTimes,
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                    fontFamily: 'Lato',
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  void _showBottomSheet(BuildContext context, CenterModel centerModel) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
-          child: Container(
-            color: Color.fromRGBO(0, 0, 0, 0.001),
-            child: GestureDetector(
-              onTap: () {},
-              child: DraggableScrollableSheet(
-                initialChildSize: 0.4,
-                minChildSize: 0.2,
-                maxChildSize: 0.75,
-                builder: (_, controller) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(25.0),
-                        topRight: const Radius.circular(25.0),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.remove,
-                          color: Colors.grey[600],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            centerModel.centerName,
-                            style:
-                                Theme.of(context).textTheme.headline6.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                          ),
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            controller: controller,
-                            itemCount: (centerModel.slots == null)
-                                ? 0
-                                : centerModel.slots.length,
-                            itemBuilder: (_, index) {
-                              return Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: buildTable(
-                                      context, centerModel.slots[index]),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

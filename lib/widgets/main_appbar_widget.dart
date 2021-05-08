@@ -10,19 +10,20 @@ class MainAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
-        child: ClipPath(
-          clipper: WaveClip(),
-          child: Container(
-            color: Colors.blue,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                title,
-              ],
-            ),
+      child: ClipPath(
+        clipper: WaveClip(),
+        child: Container(
+          color: Colors.blue,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              title,
+            ],
           ),
         ),
-        preferredSize: Size.fromHeight(kToolbarHeight));
+      ),
+      preferredSize: Size.fromHeight(kToolbarHeight),
+    );
   }
 
   @override

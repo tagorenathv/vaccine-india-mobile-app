@@ -20,7 +20,7 @@ class _AlertScreenState extends State<AlertScreen> {
 
   StateModel selectedState;
   DistrictModel selectedDistrict;
-  String selectedAgeCategory;
+  String selectedAgeCategory = "18-45";
   String name;
   String email;
   List<StateModel> stateModelList = [];
@@ -29,6 +29,10 @@ class _AlertScreenState extends State<AlertScreen> {
   @override
   void initState() {
     stateModelList = StateModel.getStates();
+    districtModelList = [];
+    name = "";
+    email = "";
+    selectedAgeCategory = "18-45";
     super.initState();
   }
 
@@ -77,10 +81,11 @@ class _AlertScreenState extends State<AlertScreen> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
+                              hintText: 'Search State',
                             ),
                             autoFocusSearchBox: true,
                             showSearchBox: true,
-                            mode: Mode.MENU,
+                            mode: Mode.BOTTOM_SHEET,
                             showSelectedItem: true,
                             items: stateModelList,
                             itemAsString: (StateModel s) => s.stateName,
@@ -137,7 +142,7 @@ class _AlertScreenState extends State<AlertScreen> {
                             ),
                             autoFocusSearchBox: true,
                             showSearchBox: false,
-                            mode: Mode.MENU,
+                            mode: Mode.BOTTOM_SHEET,
                             showSelectedItem: true,
                             items: ["18-45", "Above 45"],
                             selectedItem: selectedAgeCategory,
@@ -216,7 +221,8 @@ class _AlertScreenState extends State<AlertScreen> {
                                   context: context,
                                   type: CoolAlertType.success,
                                   text:
-                                      'You Will be Notified on Slot Availability!',
+                                      'You Will be Notified on Slot Availability!\n\n Stay Safe.',
+                                  backgroundColor: Colors.white,
                                 );
                               }
                             },
@@ -264,10 +270,12 @@ class _AlertScreenState extends State<AlertScreen> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
         ),
+        hintText: 'Search District',
       ),
+      emptyBuilder: _emptyDropDown,
       autoFocusSearchBox: true,
       showSearchBox: true,
-      mode: Mode.MENU,
+      mode: Mode.BOTTOM_SHEET,
       showSelectedItem: true,
       items: values,
       itemAsString: (DistrictModel s) => s.districtName,
@@ -330,5 +338,23 @@ class _AlertScreenState extends State<AlertScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  Widget _emptyDropDown(BuildContext context, String searchEntry) {
+    String message = "";
+    if (selectedState == null) {
+      message = "Select a State";
+    } else {
+      message = "No District Found at the moment";
+    }
+    return Center(
+      child: Text(
+        message,
+        style: Theme.of(context).textTheme.headline6.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+            ),
+      ),
+    );
   }
 }

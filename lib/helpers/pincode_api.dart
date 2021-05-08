@@ -5,7 +5,8 @@ import 'package:vaccine_india/models/CenterModel.dart';
 
 class PincodeApi {
   static Future<List<CenterModel>> fetchSlotsByPincode(String pincode) async {
-    if (pincode.isEmpty) return [];
+    if (pincode.isEmpty || pincode.length < 3 || _isNotNumeric(pincode))
+      return [];
 
     final dateString = formatDate(DateTime.now(), [dd, '-', mm, '-', yyyy]);
 
@@ -34,6 +35,7 @@ class PincodeApi {
             .map(
               (dynamic item) => CenterModel.fromJson(item),
             )
+            .where((element) => element != null)
             .toList();
         print(centers);
         return centers;
@@ -47,4 +49,11 @@ class PincodeApi {
     }
     return [];
   }
+}
+
+bool _isNotNumeric(String result) {
+  if (result == null) {
+    return true;
+  }
+  return int.tryParse(result) == null;
 }
