@@ -29,27 +29,17 @@ class _DistrictScreenState extends State<DistrictScreen> {
       scrollDirection: Axis.vertical,
       child: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
-                ]),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  buildStateDropdown(),
-                  buildDistrictDropdown(),
-                  Divider(
-                    color: Colors.white,
-                  ),
-                  slotsWidget(selectedDistrict),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                buildStateDropdown(),
+                buildDistrictDropdown(),
+                Divider(
+                  color: Colors.white,
+                ),
+                slotsWidget(selectedDistrict),
+              ],
             ),
           ),
         ],
@@ -81,6 +71,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
         items: stateModelList,
         itemAsString: (StateModel s) => s.stateName,
         selectedItem: selectedState,
+        emptyBuilder: _emptyStateDropDown,
         onChanged: (StateModel data) {
           setState(() {
             if (data == null) {
@@ -132,7 +123,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
           ),
           hintText: 'Search District',
         ),
-        emptyBuilder: _emptyDropDown,
+        emptyBuilder: _emptyDistrictDropDown,
         autoFocusSearchBox: true,
         showSearchBox: true,
         mode: Mode.BOTTOM_SHEET,
@@ -159,12 +150,30 @@ class _DistrictScreenState extends State<DistrictScreen> {
     );
   }
 
-  Widget _emptyDropDown(BuildContext context, String searchEntry) {
+  Widget _emptyDistrictDropDown(BuildContext context, String searchEntry) {
     String message = "";
     if (selectedState == null) {
       message = "Select a State";
     } else {
       message = "No District Found at the moment";
+    }
+    return Center(
+      child: Text(
+        message,
+        style: Theme.of(context).textTheme.headline6.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+            ),
+      ),
+    );
+  }
+
+  Widget _emptyStateDropDown(BuildContext context, String searchEntry) {
+    String message = "";
+    if (selectedState == null) {
+      message = "Search for Valid State";
+    } else {
+      message = "No State Found at the moment";
     }
     return Center(
       child: Text(

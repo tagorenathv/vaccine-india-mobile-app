@@ -9,7 +9,7 @@ Table buildTable(BuildContext context, SlotModel slot) {
           Text(
             "Date",
             style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: Colors.black,
+                  color: Colors.black54,
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -28,7 +28,7 @@ Table buildTable(BuildContext context, SlotModel slot) {
           Text(
             "Minimum Age",
             style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: Colors.black,
+                  color: Colors.black54,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Lato',
                 ),
@@ -47,7 +47,7 @@ Table buildTable(BuildContext context, SlotModel slot) {
           Text(
             "Vaccine Type",
             style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: Colors.black,
+                  color: Colors.black54,
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -65,7 +65,7 @@ Table buildTable(BuildContext context, SlotModel slot) {
           Text(
             "Slots",
             style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: Colors.black,
+                  color: Colors.black54,
                   fontWeight: FontWeight.bold,
                 ),
           ),

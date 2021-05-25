@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_user_agent/flutter_user_agent.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:vaccine_india/models/DistrictModel.dart';
@@ -13,7 +14,7 @@ class DistrictApi {
         stateModel.stateId;
     String userAgent =
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36';
-
+    // print("User-Agent: " + FlutterUserAgent.getPropertyAsync('userAgent'));
     final response = await http.get(
       Uri.parse(url),
       headers: {

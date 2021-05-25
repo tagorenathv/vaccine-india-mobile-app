@@ -41,6 +41,12 @@ dependencies:
   share: ^2.0.1
   flutter_native_splash: ^1.1.8+4
   flutter_launcher_icons: ^0.9.0
+  fancy_bottom_navigation: ^0.3.3
+  date_picker_timeline: ^1.2.3
+  intl: ^0.17.0
+  linked_scroll_controller: ^0.2.0
+  bottom_navy_bar: ^6.0.0
+  google_fonts: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -90,14 +96,33 @@ flutter:
   assets:
     - assets/fonts/
     - assets/vaccine_india.png
+    - assets/vaccine_india_icon.png
 
   fonts:
     - family: archia
       fonts:
         - asset: assets/fonts/archia-regular-webfont.ttf
+    - family: montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+    - family: montserrat-bold
+      fonts:
+        - asset: assets/fonts/Montserrat-Bold.ttf
+    - family: toona
+      fonts:
+        - asset: assets/fonts/toona.ttf
+    - family: billabong
+      fonts:
+        - asset: assets/fonts/Billabong.ttf
+    - family: newsreader
+      fonts:
+        - asset: assets/fonts/Newsreader.ttf
+    - family: opensans
+      fonts:
+        - asset: assets/fonts/OpenSans-Regular.ttf
 
 flutter_icons:
-  image_path: "assets/vaccine_india.png"
+  image_path: "assets/vaccine_india_icon.png"
   android: true
   ios: true
 

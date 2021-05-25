@@ -29,22 +29,23 @@ Container buildSlotdetailsOnCard(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                Text(
-                  centerModel.address1,
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
-                        color: Colors.grey,
-                      ),
-                ),
-                Text(
-                  centerModel.address2,
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
-                        color: Colors.grey,
-                      ),
-                ),
+                // Text(
+                //   centerModel.address1,
+                //   style: Theme.of(context).textTheme.subtitle1.copyWith(
+                //         color: Colors.grey,
+                //       ),
+                // ),
+                // Text(
+                //   centerModel.address2,
+                //   style: Theme.of(context).textTheme.subtitle1.copyWith(
+                //         color: Colors.grey,
+                //       ),
+                // ),
                 Row(
                   children: [
                     Icon(
                       Icons.place_rounded,
+                      color: Colors.black54,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
@@ -63,6 +64,7 @@ Container buildSlotdetailsOnCard(
                   children: [
                     Icon(
                       Icons.schedule_rounded,
+                      color: Colors.black54,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
@@ -81,6 +83,7 @@ Container buildSlotdetailsOnCard(
                   children: [
                     Icon(
                       Icons.shopping_cart_rounded,
+                      color: Colors.black54,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
