@@ -9,6 +9,7 @@ class DistrictModel {
   }
 
   bool filterByDistrictName(String filter) {
+    print("filter string at disna: " + filter);
     return this.districtName.contains(filter.toUpperCase());
   }
 

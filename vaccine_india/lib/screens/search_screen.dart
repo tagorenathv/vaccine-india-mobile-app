@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:vaccine_india/configs/color_constants.dart';
 import 'package:vaccine_india/screens/district_form.dart';
 import 'package:vaccine_india/screens/pincode_form.dart';
@@ -22,7 +23,14 @@ class _SearchScreenState extends State<SearchScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TabBar(
+                unselectedLabelColor: ColorConstants.kmainColor,
+                labelColor: ColorConstants.kmainColor,
                 indicatorColor: ColorConstants.kmainColor,
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelStyle: GoogleFonts.montserrat(
+                  color: ColorConstants.kmainColor,
+                  fontWeight: FontWeight.w500,
+                ),
                 tabs: [
                   new Tab(
                     text: "District",
@@ -31,8 +39,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     text: "Pincode",
                   ),
                 ],
-                unselectedLabelColor: Colors.black,
-                labelColor: ColorConstants.kmainColor,
               ),
               Expanded(
                 child: TabBarView(children: <Widget>[

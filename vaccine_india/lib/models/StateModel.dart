@@ -53,6 +53,7 @@ class StateModel {
   }
 
   static List<StateModel> getStates() {
+    print("getstates....");
     List<StateModel> states = [];
     statesMap.forEach((stateId, stateName) {
       states.add(StateModel(stateId, stateName.toUpperCase()));
