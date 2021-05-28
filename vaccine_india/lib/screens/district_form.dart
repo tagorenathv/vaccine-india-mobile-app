@@ -100,6 +100,11 @@ class _DistrictFormState extends State<DistrictForm> {
         showClearButton: false,
         popupSafeArea: PopupSafeArea(top: true, bottom: true),
         autoValidateMode: AutovalidateMode.onUserInteraction,
+        validator: (DistrictModel? value) {
+          if (value!.districtId.isEmpty || value.districtName.isEmpty) {
+            return "Select a District";
+          }
+        },
       ),
     );
   }
@@ -146,6 +151,11 @@ class _DistrictFormState extends State<DistrictForm> {
         showClearButton: false,
         popupSafeArea: PopupSafeArea(top: true, bottom: true),
         autoValidateMode: AutovalidateMode.onUserInteraction,
+        validator: (StateModel? value) {
+          if (value!.stateId.isEmpty || value.stateName.isEmpty) {
+            return "Select a State";
+          }
+        },
       ),
     );
   }

@@ -33,9 +33,7 @@ class _MainScreenState extends State<MainScreen> {
       child: Scaffold(
         backgroundColor: ColorConstants.kbackground,
         appBar: getAppBar(),
-        body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
+        body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: ColorConstants.kbackground,
