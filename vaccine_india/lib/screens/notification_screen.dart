@@ -278,6 +278,7 @@ class _NotifyScreenState extends State<NotifyScreen> {
                               _create(NotifyModel(
                                   selectedState!.stateId,
                                   selectedDistrict!.districtId,
+                                  "", //pincode
                                   selectedAgeCategory,
                                   name!,
                                   email!));
