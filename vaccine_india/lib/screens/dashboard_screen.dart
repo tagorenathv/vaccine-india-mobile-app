@@ -50,61 +50,64 @@ class _DashboardState extends State<Dashboard> {
       scrollDirection: Axis.vertical,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Statistics',
-                style: const TextStyle(
-                  color: Color(0xff0C2AAF),
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Statistics',
+                  style: const TextStyle(
+                    color: Color(0xff0C2AAF),
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                children: <Widget>[
-                  Flexible(
-                    child: Column(
-                      children: [
-                        _buildStatCardRow('Total Cases', statsModel.total,
-                            '100', statsModel.totalChange, Colors.purple),
-                        _buildStatCardRow(
-                            'Active Cases',
-                            statsModel.active,
-                            statsModel.activePercentage,
-                            statsModel.activeChange,
-                            Colors.lightBlue),
-                        _buildStatCardRow(
-                            'Discharged',
-                            statsModel.discharged,
-                            statsModel.dischargePercentage,
-                            statsModel.dischargedChange,
-                            Colors.lightGreen),
-                        _buildStatCardRow(
-                            'Deaths',
-                            statsModel.deaths,
-                            statsModel.deathsPercentage,
-                            statsModel.deathsChange,
-                            Colors.red),
-                        _buildStatCardRow(
-                            'Total Vaccination',
-                            statsModel.totalVaccinated,
-                            '',
-                            statsModel.totalVaccinatedChange,
-                            Colors.teal),
-                      ],
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: <Widget>[
+                    Flexible(
+                      child: Column(
+                        children: [
+                          _buildStatCardRow('Total Cases', statsModel.total,
+                              '100', statsModel.totalChange, Colors.purple),
+                          _buildStatCardRow(
+                              'Active Cases',
+                              statsModel.active,
+                              statsModel.activePercentage,
+                              statsModel.activeChange,
+                              Colors.lightBlue),
+                          _buildStatCardRow(
+                              'Discharged',
+                              statsModel.discharged,
+                              statsModel.dischargePercentage,
+                              statsModel.dischargedChange,
+                              Colors.lightGreen),
+                          _buildStatCardRow(
+                              'Deaths',
+                              statsModel.deaths,
+                              statsModel.deathsPercentage,
+                              statsModel.deathsChange,
+                              Colors.red),
+                          _buildStatCardRow(
+                              'Total Vaccination',
+                              statsModel.totalVaccinated,
+                              '',
+                              statsModel.totalVaccinatedChange,
+                              Colors.teal),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
